@@ -1,0 +1,36 @@
+<div class="bg-white shadow-lg rounded-xl p-5">
+
+  <h2 class="text-xl font-bold text-gray-800 mb-2">
+    {{ project().name }}
+  </h2>
+
+  <p class="text-gray-600 mb-3">
+    {{ project().description }}
+  </p>
+
+  <p class="mb-4">
+    <span class="font-semibold">Statut :</span>
+
+    <span
+      class="ml-2 px-2 py-1 rounded-full text-sm"
+      [class.bg-green-100]="project().status === 'Terminé'"
+      [class.text-green-700]="project().status === 'Terminé'"
+      [class.bg-yellow-100]="project().status === 'En cours'"
+      [class.text-yellow-700]="project().status === 'En cours'"
+      [class.bg-gray-100]="project().status === 'En attente'"
+      [class.text-gray-700]="project().status === 'En attente'"
+    >
+      {{ project().status }}
+    </span>
+  </p>
+
+  <app-task-list [tasks]="project().tasks" />
+
+  <button
+    (click)="selectProject()"
+    class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+  >
+    Sélectionner
+  </button>
+
+</div>

@@ -1,0 +1,36 @@
+<div class="max-w-6xl mx-auto p-6">
+
+  <h1 class="text-3xl font-bold mb-6">
+    Liste des projets
+  </h1>
+
+  <input
+    type="text"
+    placeholder="Rechercher un projet..."
+    
+    //Cela crée une liaison bidirectionnelle entre le champ HTML et la variable TypeScript.
+    [(ngModel)]="searchTerm"
+    class="w-full border border-gray-300 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  >
+
+  <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+    <!--track project.id permet à Angular d'identifier chaque projet de manière unique.-->
+    @for (project of filteredProjects(); track project.id) {
+
+      <app-project-card
+      //C'est la communication : Parent → Enfant
+      //ProjectList possède le projet et le transmet à ProjectCard via la propriété [project]
+        [project]="project"
+
+      //C'est l'inverse : Enfant → Parent, 
+      //Lorsqu'on clique sur le bouton Il envoie le projet au parent
+      //$event représente la donnée envoyée par l'événement
+        (projectSelected)="selectProject($event)"
+      />
+
+    }
+
+  </div>
+
+</div>
