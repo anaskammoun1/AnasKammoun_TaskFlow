@@ -1,12 +1,50 @@
 <div class="bg-white shadow-lg rounded-xl p-5">
 
   <h2 class="text-xl font-bold text-gray-800 mb-2">
-    {{ project().name }}
+    {{ project().name | uppercase }}
   </h2>
+
+  <p>
+    Date de début :
+    {{ project().startDate | date:'dd MMMM yyyy':'':'fr' }}
+  </p>
+
+  <p>
+    Budget :
+    {{ project().budget | currency:'TND':'':'1.2-2':'fr' }} TND
+  </p>
 
   <p class="text-gray-600 mb-3">
     {{ project().description }}
   </p>
+
+  @if (project().tasks.length > 0) {
+    <p>
+      Taux de réalisation :
+      {{ completionRate | percent:'1.0-0':'fr' }}
+    </p>
+
+    <p>
+      Coût moyen par tâche :
+      {{ averageCost | number:'1.0-0':'fr' }}
+    </p>
+  }
+
+  <h3>Les trois premières tâches</h3>
+
+  <ul>
+    @for (task of (project().tasks | slice:0:3); track task.id) {
+      <li>{{ task.title }}</li>
+    }
+  </ul>
+
+  <h3>Nombre de tâches par priorité</h3>
+
+  <ul>
+    @for (item of (taskCountByPriority | keyvalue); track item.key) {
+      <li>{{ item.key }} : {{ item.value }}</li>
+    }
+  </ul>
 
   <p class="mb-4">
     <span class="font-semibold">Statut :</span>

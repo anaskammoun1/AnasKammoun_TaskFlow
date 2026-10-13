@@ -1,0 +1,25 @@
+<div class="flex gap-2 mb-6">
+
+  <button
+    (click)="selectView('task')"
+    class="px-4 py-2 rounded-lg transition"
+    [class.bg-blue-600]="activeView() === 'task'"
+    [class.text-white]="activeView() === 'task'"
+    [class.bg-gray-100]="activeView() !== 'task'"
+    [class.text-gray-700]="activeView() !== 'task'"
+  >
+    Par tâche
+  </button>
+
+  <button
+    (click)="selectView('user')"
+    class="px-4 py-2 rounded-lg transition"
+    [class.bg-blue-600]="activeView() === 'user'"
+    [class.text-white]="activeView() === 'user'"
+    [class.bg-gray-100]="activeView() !== 'user'"
+    [class.text-gray-700]="activeView() !== 'user'"
+  >
+    Par user
+  </button>
+
+</div>

@@ -1,1 +1,12 @@
-<app-project-list />
+<app-view-toggle
+  [activeView]="activeView()"
+  (viewChange)="changeView($event)"
+/>
+
+@if (activeView() === 'user') {
+  <app-user-list />
+}
+
+@if (activeView() === 'task') {
+  <app-project-list />
+}

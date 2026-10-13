@@ -1,0 +1,98 @@
+<div class="bg-white shadow-lg rounded-xl p-5">
+
+  <div class="flex justify-between items-start">
+
+    <div
+      class="flex h-12 w-12 items-center justify-center
+            rounded-full bg-blue-600 text-white font-bold">
+      {{ user().name | initials }}
+    </div>
+    <div>
+      <h2 class="text-xl font-bold text-gray-800">
+        {{ user().name | titlecase }}
+      </h2>
+
+      <p class="text-gray-600">
+        {{ user().email | lowercase}}
+      </p>
+
+      <p class="text-gray-600">
+        {{ user().role }}
+      </p>
+    </div>
+
+    @if (user().active) {
+
+      <span class="px-3 py-1 rounded-full text-sm bg-green-100 text-green-700">
+        Actif
+      </span>
+
+    } @else {
+
+      <span class="px-3 py-1 rounded-full text-sm bg-red-100 text-red-700">
+        Inactif
+      </span>
+
+    }
+
+  </div>
+
+  <!-- Compteurs -->
+
+  <div class="grid grid-cols-3 gap-3 mt-5">
+
+    <div class="bg-gray-100 rounded-lg p-3 text-center">
+      <p class="text-2xl font-bold">
+        {{ todoCount() }}
+      </p>
+      <p class="text-sm text-gray-600">
+        À faire
+      </p>
+    </div>
+
+    <div class="bg-yellow-100 rounded-lg p-3 text-center">
+      <p class="text-2xl font-bold">
+        {{ inProgressCount() }}
+      </p>
+      <p class="text-sm text-gray-600">
+        En cours
+      </p>
+    </div>
+
+    <div class="bg-green-100 rounded-lg p-3 text-center">
+      <p class="text-2xl font-bold">
+        {{ completedCount() }}
+      </p>
+      <p class="text-sm text-gray-600">
+        Terminées
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Tâches regroupées par projet -->
+
+  <div class="mt-5">
+
+    @for (project of projects(); track project.id) {
+
+      @if (project.tasks.some(task => task.assigneeId === user().id)) {
+
+        <app-user-project-group
+          [project]="project"
+          [userId]="user().id"
+        />
+
+      }
+
+    } @empty {
+
+      <p class="text-gray-500 italic">
+        Aucune tâche assignée
+      </p>
+
+    }
+
+  </div>
+
+</div>

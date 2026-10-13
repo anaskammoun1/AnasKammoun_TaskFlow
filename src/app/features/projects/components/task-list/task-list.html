@@ -1,3 +1,4 @@
+
 <div class="mt-4">
 
   <h3 class="font-semibold text-gray-800 mb-3">
@@ -5,17 +6,13 @@
   </h3>
 
   @if (tasks().length === 0) {
-
     <p class="text-gray-500 italic">
       Aucune tâche.
     </p>
-
   } @else {
-
     <div class="space-y-3">
 
       @for (task of tasks(); track task.id) {
-
         <div
           class="p-3 rounded-lg border-l-4 bg-gray-50"
           [class.border-green-500]="task.status === 'Terminé'"
@@ -24,7 +21,6 @@
         >
 
           <div class="flex justify-between items-center">
-
             <span class="font-medium text-gray-800">
               {{ task.title }}
             </span>
@@ -32,12 +28,10 @@
             <span class="text-sm text-gray-600">
               {{ task.priority }}
             </span>
-
           </div>
 
           <p class="text-sm mt-1">
             Statut :
-
             <span
               class="font-semibold"
               [class.text-green-600]="task.status === 'Terminé'"
@@ -48,12 +42,32 @@
             </span>
           </p>
 
-        </div>
+          <p class="text-sm mt-2">
+            Échéance :
+            @if (task.dueDate) {
+              {{ task.dueDate | date:'dd/MM/yyyy' }}
 
+              @if (task.status === 'Terminé') {
+                · Terminée
+              } @else {
+                · {{ task.dueDate | deadline }}
+              }
+            } @else {
+              Pas d’échéance
+            }
+          </p>
+
+
+          @if (task.description) {
+            <p class="text-sm text-gray-600 mt-2">
+              {{ task.description | truncate:40 }}
+            </p>
+          }
+
+        </div>
       }
 
     </div>
-
   }
 
 </div>

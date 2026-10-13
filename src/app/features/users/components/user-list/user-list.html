@@ -1,0 +1,38 @@
+<div class="max-w-6xl mx-auto p-6">
+
+  <h1 class="text-3xl font-bold mb-6">
+    Liste des utilisateurs
+  </h1>
+
+  <input
+    type="text"
+    placeholder="Rechercher un utilisateur..."
+    [ngModel]="searchTerm()"
+    (ngModelChange)="searchTerm.set($event)"
+    class="w-full border border-gray-300 rounded-lg p-3 mb-6"
+  >
+
+  @if (filteredUsers().length === 0) {
+
+    <app-empty-state
+    message="Aucun utilisateur ne correspond à votre recherche."
+    />
+
+  } @else {
+
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+      @for (user of filteredUsers(); track user.id) {
+
+        <app-user-card
+          [user]="user"
+          [projects]="projects()"
+        />
+
+      }
+
+    </div>
+
+  }
+
+</div>
