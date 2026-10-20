@@ -1,11 +1,13 @@
 import { Component, input, output } from '@angular/core';
 import { Project } from '../../models/project.model';
 import { TaskList } from '../task-list/task-list';
-import { UpperCasePipe,DatePipe, CurrencyPipe,PercentPipe,DecimalPipe,SlicePipe, KeyValuePipe} from '@angular/common';
+import { UpperCasePipe,DatePipe, CurrencyPipe,PercentPipe,DecimalPipe,SlicePipe, KeyValuePipe,NgStyle } from '@angular/common';
+import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
+
 
 @Component({
   selector: 'app-project-card',
-  imports: [TaskList, UpperCasePipe, DatePipe, CurrencyPipe, PercentPipe,DecimalPipe,SlicePipe, KeyValuePipe],
+  imports: [TaskList, UpperCasePipe, DatePipe, CurrencyPipe, PercentPipe,DecimalPipe,SlicePipe, KeyValuePipe, HighlightDirective, NgStyle ],
   templateUrl: './project-card.html',
   styleUrl: './project-card.css'
 })
@@ -49,6 +51,20 @@ export class ProjectCard {
     }
 
     return counts;
+  }
+
+  get barColor(): string {
+    const percentage = this.completionRate * 100;
+
+    if (percentage < 34) {
+      return '#ef4444';
+    }
+
+    if (percentage <= 66) {
+      return '#f59e0b';
+    }
+
+    return '#22c55e';
   }
 
   projectSelected = output<Project>();

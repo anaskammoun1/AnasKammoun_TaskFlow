@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
 import { ProjectList } from './project-list';
+
+registerLocaleData(localeFr);
 
 describe('ProjectList', () => {
   let component: ProjectList;

@@ -1,23 +1,53 @@
-
 <div class="mt-4">
 
-  <h3 class="font-semibold text-gray-800 mb-3">
-    Tâches
-  </h3>
+  <h3 class="font-semibold text-gray-800 mb-3">Tâches</h3>
 
   @if (tasks().length === 0) {
-    <p class="text-gray-500 italic">
-      Aucune tâche.
-    </p>
+    <p class="text-gray-500 italic">Aucune tâche.</p>
   } @else {
+
+    <!-- Filter buttons -->
+    <div class="flex gap-2 mb-3 flex-wrap">
+      <button
+        type="button"
+        class="px-3 py-1 rounded-full text-sm border"
+        [ngClass]="selectedStatus() === ''
+          ? 'bg-gray-800 text-white'
+          : 'bg-white text-gray-700'"
+        (click)="selectedStatus.set('')"
+      >
+        Toutes
+      </button>
+
+      @for (s of statuses; track s) {
+        <button
+          type="button"
+          class="px-3 py-1 rounded-full text-sm border"
+          [ngClass]="selectedStatus() === s
+            ? 'bg-gray-800 text-white'
+            : 'bg-white text-gray-700'"
+          (click)="selectedStatus.set(s)"
+        >
+          {{ s }}
+        </button>
+      }
+    </div>
+
     <div class="space-y-3">
 
-      @for (task of tasks(); track task.id) {
+      @for (task of tasks() | filterBy:'status':selectedStatus(); track task.id) {
         <div
+          appOverdue
+          [dueDate]="task.dueDate"
+          [done]="task.status === 'Terminé'"
+
+          appHighlight="#e0f2fe"
           class="p-3 rounded-lg border-l-4 bg-gray-50"
-          [class.border-green-500]="task.status === 'Terminé'"
-          [class.border-yellow-500]="task.status === 'En cours'"
-          [class.border-gray-400]="task.status === 'En attente'"
+            [ngClass]="{
+              'border-green-500': task.status === 'Terminé',
+              'border-yellow-500': task.status === 'En cours',
+              'border-gray-400': task.status === 'En attente'
+            }"
         >
 
           <div class="flex justify-between items-center">
@@ -25,8 +55,21 @@
               {{ task.title }}
             </span>
 
-            <span class="text-sm text-gray-600">
-              {{ task.priority }}
+            <span
+              class="text-sm font-semibold"
+              [appPriorityColor]="task.priority"
+            >
+              @switch (task.priority) {
+                @case ('Haute') {
+                  ▲ Haute
+                }
+                @case ('Moyenne') {
+                  ● Moyenne
+                }
+                @default {
+                  ▼ Basse
+                }
+              }
             </span>
           </div>
 
@@ -44,22 +87,24 @@
 
           <p class="text-sm mt-2">
             Échéance :
-            @if (task.dueDate) {
-              {{ task.dueDate | date:'dd/MM/yyyy' }}
+            @if (task.dueDate; as dueDate) {
+              {{ dueDate | date:'dd/MM/yyyy' }}
 
               @if (task.status === 'Terminé') {
                 · Terminée
               } @else {
-                · {{ task.dueDate | deadline }}
+                · {{ dueDate | deadline }}
               }
             } @else {
-              Pas d’échéance
+              Aucune échéance
             }
           </p>
 
 
           @if (task.description) {
-            <p class="text-sm text-gray-600 mt-2">
+            <p class="text-sm text-gray-600 mt-2"
+            [appTooltip]="task.description"
+            >
               {{ task.description | truncate:40 }}
             </p>
           }

@@ -2,13 +2,15 @@ import { Component, computed, input } from '@angular/core';
 import { User } from '../../models/user.model';
 import { Project } from '../../../projects/models/project.model';
 import { UserProjectGroup } from '../user-project-group/user-project-group';
-import { TitleCasePipe,LowerCasePipe} from '@angular/common';
+import { TitleCasePipe,LowerCasePipe,NgClass } from '@angular/common';
 import { InitialsPipe } from '../../../../shared/components/pipes/initials-pipe';
+import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
+import { NgStyle } from '@angular/common';
 
 
 @Component({
   selector: 'app-user-card',
-  imports: [UserProjectGroup, TitleCasePipe,LowerCasePipe,InitialsPipe],
+  imports: [UserProjectGroup, TitleCasePipe,LowerCasePipe,InitialsPipe, HighlightDirective,NgClass,NgStyle ],
   templateUrl: './user-card.html',
   styleUrl: './user-card.css'
 })
@@ -46,5 +48,16 @@ export class UserCard {
       )
     );
   });
+
+  roleColors: Record<string, string> = {
+    'Admin': '#7c3aed',
+    'Chef de projet': '#2563eb',
+    'Développeur': '#059669',
+    'Testeur': '#ea580c'
+  };
+
+  get initialColor(): string {
+    return this.roleColors[this.user().role] ?? '#6b7280';
+  }
 
 }

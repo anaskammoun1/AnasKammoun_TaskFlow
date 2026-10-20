@@ -1,4 +1,4 @@
-<div class="bg-white shadow-lg rounded-xl p-5">
+<div appHighlight="#f0f9ff" class="bg-white shadow-lg rounded-xl p-5">
 
   <h2 class="text-xl font-bold text-gray-800 mb-2">
     {{ project().name | uppercase }}
@@ -20,10 +20,19 @@
 
   @if (project().tasks.length > 0) {
     <p>
-      Taux de réalisation :
-      {{ completionRate | percent:'1.0-0':'fr' }}
+    Taux de réalisation :
+    {{ completionRate | percent:'1.0-0':'fr' }}
     </p>
 
+    <div class="w-full bg-gray-200 rounded-full h-2">
+      <div
+        class="h-2 rounded-full"
+        [ngStyle]="{
+          'width': (completionRate * 100) + '%',
+          'background-color': barColor
+        }"
+      ></div>
+    </div>
     <p>
       Coût moyen par tâche :
       {{ averageCost | number:'1.0-0':'fr' }}
