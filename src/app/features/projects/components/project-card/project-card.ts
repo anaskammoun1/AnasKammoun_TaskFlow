@@ -1,10 +1,16 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output,computed  } from '@angular/core';
 import { Project } from '../../models/project.model';
 import { TaskList } from '../task-list/task-list';
 import { UpperCasePipe,DatePipe, CurrencyPipe,PercentPipe,DecimalPipe,SlicePipe, KeyValuePipe,NgStyle } from '@angular/common';
 import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
+import { User } from '../../../users/models/user.model';
+import { Task } from '../../models/task.model';
 
-
+type TaskStatusChangeEvent = {
+  projectId: number;
+  taskId: number;
+  status: Task['status'];
+};
 @Component({
   selector: 'app-project-card',
   imports: [TaskList, UpperCasePipe, DatePipe, CurrencyPipe, PercentPipe,DecimalPipe,SlicePipe, KeyValuePipe, HighlightDirective, NgStyle ],
@@ -14,20 +20,23 @@ import { HighlightDirective } from '../../../../shared/directives/highlight.dire
 export class ProjectCard {
 
   project = input.required<Project>();
-  // Taux de réalisation : tâches terminées / total des tâches
-  get completionRate(): number {
-    const tasks = this.project().tasks;
+  users = input<User[]>([]);
 
-    if (tasks.length === 0) {
+  completedTasks = computed(() =>
+  this.project().tasks.filter(task => task.status === 'Terminé').length
+  );
+
+  completionRate = computed(() => {
+    const total = this.project().tasks.length;
+
+    if (total === 0) {
       return 0;
     }
 
-    const completedTasks = tasks.filter(
-      task => task.status === 'Terminé'
-    ).length;
+    return this.completedTasks() / total;
+  });
 
-    return completedTasks / tasks.length;
-  }
+  // Taux de réalisation : tâches terminées / total des tâches
 
   // Coût moyen par tâche
   get averageCost(): number {
@@ -54,7 +63,7 @@ export class ProjectCard {
   }
 
   get barColor(): string {
-    const percentage = this.completionRate * 100;
+    const percentage = this.completionRate() * 100;
 
     if (percentage < 34) {
       return '#ef4444';
@@ -72,4 +81,18 @@ export class ProjectCard {
   selectProject() {
     this.projectSelected.emit(this.project());
   }
+
+  taskStatusChange = output<TaskStatusChangeEvent>();
+
+  onTaskStatusChange(event: {
+    taskId: number;
+    status: Task['status'];
+  }): void {
+    this.taskStatusChange.emit({
+      projectId: this.project().id,
+      taskId: event.taskId,
+      status: event.status
+    });
+  }
+
 }

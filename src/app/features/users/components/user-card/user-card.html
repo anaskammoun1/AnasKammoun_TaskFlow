@@ -78,6 +78,8 @@
         <app-user-project-group
           [project]="project"
           [userId]="user().id"
+          [users]="users()"
+          (taskStatusChange)="onTaskStatusChange($event)"
         />
 
       }

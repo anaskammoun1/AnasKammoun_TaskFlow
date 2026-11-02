@@ -1,0 +1,104 @@
+<div
+  appHighlight="#e0f2fe"
+  appOverdue
+  [dueDate]="task().dueDate"
+  [done]="task().status === 'Terminé'"
+  class="p-3 rounded-lg border-l-4 bg-gray-50"
+  [ngClass]="{
+    'border-green-500': task().status === 'Terminé',
+    'border-yellow-500': task().status === 'En cours',
+    'border-gray-400': task().status === 'En attente'
+  }"
+>
+
+  <!-- Titre et priorité -->
+  <div class="flex justify-between items-center">
+    <span class="font-medium text-gray-800">
+      {{ task().title }}
+    </span>
+
+    <span
+      class="text-sm font-semibold"
+      [appPriorityColor]="task().priority"
+    >
+      @switch (task().priority) {
+        @case ('Haute') {
+          ▲ Haute
+        }
+        @case ('Moyenne') {
+          ● Moyenne
+        }
+        @default {
+          ▼ Basse
+        }
+      }
+    </span>
+  </div>
+
+  <!-- Statut -->
+  <div class="flex justify-between items-center mt-2">
+    <p class="text-sm">
+      Statut :
+      <span
+        class="font-semibold"
+        [ngClass]="{
+          'text-green-600': task().status === 'Terminé',
+          'text-yellow-600': task().status === 'En cours',
+          'text-gray-500': task().status === 'En attente'
+        }"
+      >
+        {{ task().status }}
+      </span>
+    </p>
+
+    <button
+      type="button"
+      (click)="changeStatus()"
+      class="rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700"
+    >
+      Changer le statut
+    </button>
+  </div>
+
+  <!-- Échéance -->
+  <p
+    class="text-sm mt-2"
+    [ngStyle]="{
+      'color': task().status === 'Terminé'
+        ? '#16a34a'
+        : '#4b5563'
+    }"
+  >
+    Échéance :
+    @if (task().dueDate; as dueDate) {
+      {{ dueDate | date:'dd/MM/yyyy' }}
+
+      @if (task().status === 'Terminé') {
+        · Terminée
+      } @else {
+        · {{ dueDate | deadline }}
+      }
+    } @else {
+      Aucune échéance
+    }
+  </p>
+
+  <!-- Utilisateur assigné -->
+  @if (showAssignee()) {
+    <p class="text-sm text-gray-600 mt-2">
+      Assigné à :
+      {{ assigneeName() ?? 'Aucun utilisateur assigné' }}
+    </p>
+  }
+
+  <!-- Description -->
+  @if (task().description) {
+    <p
+      class="text-sm text-gray-600 mt-2"
+      [appTooltip]="task().description!"
+    >
+      {{ task().description | truncate:40 }}
+    </p>
+  }
+
+</div>

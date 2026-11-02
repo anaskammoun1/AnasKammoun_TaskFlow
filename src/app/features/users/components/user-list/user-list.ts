@@ -6,6 +6,13 @@ import { PROJECTS } from '../../../projects/data/projects.data';
 
 import { UserCard } from '../user-card/user-card';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
+import { Task } from '../../../projects/models/task.model';
+
+type TaskStatusChangeEvent = {
+  projectId: number;
+  taskId: number;
+  status: Task['status'];
+};
 
 @Component({
   selector: 'app-user-list',
@@ -28,5 +35,25 @@ export class UserList {
         .includes(this.searchTerm().toLowerCase())
     );
   });
+
+  updateTaskStatus(event: TaskStatusChangeEvent): void {
+    this.projects.update(projects =>
+      projects.map(project =>
+        project.id !== event.projectId
+          ? project
+          : {
+              ...project,
+              tasks: project.tasks.map(task =>
+                task.id !== event.taskId
+                  ? task
+                  : {
+                      ...task,
+                      status: event.status
+                    }
+              )
+            }
+      )
+    );
+  }
 
 }

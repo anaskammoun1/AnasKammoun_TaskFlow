@@ -27,6 +27,8 @@
         <app-user-card
           [user]="user"
           [projects]="projects()"
+          [users]="users()"
+          (taskStatusChange)="updateTaskStatus($event)"
         />
 
       }

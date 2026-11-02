@@ -33,85 +33,27 @@
       }
     </div>
 
+    <!-- Task list -->
     <div class="space-y-3">
-
-      @for (task of tasks() | filterBy:'status':selectedStatus(); track task.id) {
-        <div
-          appOverdue
-          [dueDate]="task.dueDate"
-          [done]="task.status === 'Terminé'"
-
-          appHighlight="#e0f2fe"
-          class="p-3 rounded-lg border-l-4 bg-gray-50"
-            [ngClass]="{
-              'border-green-500': task.status === 'Terminé',
-              'border-yellow-500': task.status === 'En cours',
-              'border-gray-400': task.status === 'En attente'
-            }"
-        >
-
-          <div class="flex justify-between items-center">
-            <span class="font-medium text-gray-800">
-              {{ task.title }}
-            </span>
-
-            <span
-              class="text-sm font-semibold"
-              [appPriorityColor]="task.priority"
-            >
-              @switch (task.priority) {
-                @case ('Haute') {
-                  ▲ Haute
-                }
-                @case ('Moyenne') {
-                  ● Moyenne
-                }
-                @default {
-                  ▼ Basse
-                }
-              }
-            </span>
-          </div>
-
-          <p class="text-sm mt-1">
-            Statut :
-            <span
-              class="font-semibold"
-              [class.text-green-600]="task.status === 'Terminé'"
-              [class.text-yellow-600]="task.status === 'En cours'"
-              [class.text-gray-500]="task.status === 'En attente'"
-            >
-              {{ task.status }}
-            </span>
-          </p>
-
-          <p class="text-sm mt-2">
-            Échéance :
-            @if (task.dueDate; as dueDate) {
-              {{ dueDate | date:'dd/MM/yyyy' }}
-
-              @if (task.status === 'Terminé') {
-                · Terminée
-              } @else {
-                · {{ dueDate | deadline }}
-              }
-            } @else {
-              Aucune échéance
-            }
-          </p>
-
-
-          @if (task.description) {
-            <p class="text-sm text-gray-600 mt-2"
-            [appTooltip]="task.description"
-            >
-              {{ task.description | truncate:40 }}
-            </p>
-          }
-
-        </div>
+      @for (
+        task of (
+          selectedStatus() === ''
+            ? tasks()
+            : (tasks() | filterBy:'status':selectedStatus())
+        );
+        track task.id
+      ) {
+        <app-task-item
+          [task]="task"
+          [showAssignee]="showAssignee()"
+          [assigneeName]="getAssigneeName(task.assigneeId)"
+          (taskStatusChange)="onTaskStatusChange($event)"
+        />
+      } @empty {
+        <p class="text-gray-500 italic">
+          Aucune tâche pour ce statut.
+        </p>
       }
-
     </div>
   }
 

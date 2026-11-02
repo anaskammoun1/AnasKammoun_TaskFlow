@@ -1,11 +1,18 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { User } from '../../models/user.model';
 import { Project } from '../../../projects/models/project.model';
 import { UserProjectGroup } from '../user-project-group/user-project-group';
 import { TitleCasePipe,LowerCasePipe,NgClass } from '@angular/common';
-import { InitialsPipe } from '../../../../shared/components/pipes/initials-pipe';
+import { InitialsPipe } from '../../../../shared/pipes/initials-pipe';
 import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
 import { NgStyle } from '@angular/common';
+import { Task } from '../../../projects/models/task.model';
+
+type TaskStatusChangeEvent = {
+  projectId: number;
+  taskId: number;
+  status: Task['status'];
+};
 
 
 @Component({
@@ -19,6 +26,10 @@ export class UserCard {
   user = input.required<User>();
 
   projects = input.required<Project[]>();
+
+  users = input.required<User[]>();
+
+  taskStatusChange = output<TaskStatusChangeEvent>();
 
   assignedTasks = computed(() => {
     return this.projects()
@@ -58,6 +69,10 @@ export class UserCard {
 
   get initialColor(): string {
     return this.roleColors[this.user().role] ?? '#6b7280';
+  }
+
+  onTaskStatusChange(event: TaskStatusChangeEvent): void {
+    this.taskStatusChange.emit(event);
   }
 
 }

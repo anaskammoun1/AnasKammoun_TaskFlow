@@ -14,7 +14,9 @@
 
   <app-task-list
     [tasks]="userTasks()"
-    [showAssignee]="false"
+    [users]="users()"
+    [showAssignee]="true"
+    (taskStatusChange)="onTaskStatusChange($event)"
   />
 
 </div>
