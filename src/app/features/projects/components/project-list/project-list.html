@@ -30,6 +30,7 @@
       //$event représente la donnée envoyée par l'événement
         (projectSelected)="selectProject($event)"
         (taskStatusChange)="updateTaskStatus($event)"
+        (taskDeleted)="deleteTask($event)"
       />
 
     } @empty {

@@ -10,6 +10,11 @@ type TaskStatusChangeEvent = {
   status: Task['status'];
 };
 
+type TaskDeletedEvent = {
+  projectId: number;
+  taskId: number;
+};
+
 @Component({
   selector: 'app-user-project-group',
   imports: [TaskList],
@@ -26,6 +31,8 @@ export class UserProjectGroup {
 
   taskStatusChange = output<TaskStatusChangeEvent>();
 
+  taskDeleted = output<TaskDeletedEvent>();
+
   userTasks = computed(() => {
     return this.project().tasks.filter(
       task => task.assigneeId === this.userId()
@@ -40,6 +47,13 @@ export class UserProjectGroup {
       projectId: this.project().id,
       taskId: event.taskId,
       status: event.status
+    });
+  }
+
+  onTaskDeleted(taskId: number): void {
+    this.taskDeleted.emit({
+      projectId: this.project().id,
+      taskId
     });
   }
 

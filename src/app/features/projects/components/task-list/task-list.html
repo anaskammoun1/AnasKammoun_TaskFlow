@@ -48,6 +48,7 @@
           [showAssignee]="showAssignee()"
           [assigneeName]="getAssigneeName(task.assigneeId)"
           (taskStatusChange)="onTaskStatusChange($event)"
+          (taskDeleted)="onTaskDeleted($event)"
         />
       } @empty {
         <p class="text-gray-500 italic">

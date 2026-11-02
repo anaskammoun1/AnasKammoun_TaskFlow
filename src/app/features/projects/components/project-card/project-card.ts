@@ -11,6 +11,11 @@ type TaskStatusChangeEvent = {
   taskId: number;
   status: Task['status'];
 };
+
+type TaskDeletedEvent = {
+  projectId: number;
+  taskId: number;
+};
 @Component({
   selector: 'app-project-card',
   imports: [TaskList, UpperCasePipe, DatePipe, CurrencyPipe, PercentPipe,DecimalPipe,SlicePipe, KeyValuePipe, HighlightDirective, NgStyle ],
@@ -84,6 +89,8 @@ export class ProjectCard {
 
   taskStatusChange = output<TaskStatusChangeEvent>();
 
+  taskDeleted = output<TaskDeletedEvent>();
+
   onTaskStatusChange(event: {
     taskId: number;
     status: Task['status'];
@@ -92,6 +99,13 @@ export class ProjectCard {
       projectId: this.project().id,
       taskId: event.taskId,
       status: event.status
+    });
+  }
+
+  onTaskDeleted(taskId: number): void {
+    this.taskDeleted.emit({
+      projectId: this.project().id,
+      taskId
     });
   }
 

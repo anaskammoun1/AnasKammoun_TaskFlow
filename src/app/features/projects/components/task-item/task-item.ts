@@ -37,6 +37,8 @@ export class TaskItem {
     status: Task['status'];
   }>();
 
+  taskDeleted = output<number>();
+
   changeStatus(): void {
     const task = this.task();
 
@@ -60,6 +62,10 @@ export class TaskItem {
       taskId: task.id,
       status: newStatus
     });
+  }
+
+  deleteTask(): void {
+    this.taskDeleted.emit(this.task().id);
   }
 
 }

@@ -95,6 +95,7 @@
     [tasks]="project().tasks"
     [showAssignee]="true"
     (taskStatusChange)="onTaskStatusChange($event)"
+    (taskDeleted)="onTaskDeleted($event)"
   />
 
   <button

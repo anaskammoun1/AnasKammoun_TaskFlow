@@ -80,6 +80,7 @@
           [userId]="user().id"
           [users]="users()"
           (taskStatusChange)="onTaskStatusChange($event)"
+          (taskDeleted)="onTaskDeleted($event)"
         />
 
       }

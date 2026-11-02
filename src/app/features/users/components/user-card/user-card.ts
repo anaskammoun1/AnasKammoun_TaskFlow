@@ -14,6 +14,11 @@ type TaskStatusChangeEvent = {
   status: Task['status'];
 };
 
+type TaskDeletedEvent = {
+  projectId: number;
+  taskId: number;
+};
+
 
 @Component({
   selector: 'app-user-card',
@@ -30,6 +35,8 @@ export class UserCard {
   users = input.required<User[]>();
 
   taskStatusChange = output<TaskStatusChangeEvent>();
+
+  taskDeleted = output<TaskDeletedEvent>();
 
   assignedTasks = computed(() => {
     return this.projects()
@@ -73,6 +80,10 @@ export class UserCard {
 
   onTaskStatusChange(event: TaskStatusChangeEvent): void {
     this.taskStatusChange.emit(event);
+  }
+
+  onTaskDeleted(event: TaskDeletedEvent): void {
+    this.taskDeleted.emit(event);
   }
 
 }

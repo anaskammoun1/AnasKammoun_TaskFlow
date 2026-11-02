@@ -13,6 +13,11 @@ type TaskStatusChangeEvent = {
   taskId: number;
   status: Task['status'];
 };
+
+type TaskDeletedEvent = {
+  projectId: number;
+  taskId: number;
+};
 @Component({
   selector: 'app-project-list',
   imports: [FormsModule, ProjectCard],
@@ -68,5 +73,17 @@ export class ProjectList implements OnInit {
     )
   );
 }
-}
 
+  deleteTask(event: TaskDeletedEvent): void {
+    this.projects.update(projects =>
+      projects.map(project =>
+        project.id !== event.projectId
+          ? project
+          : {
+              ...project,
+              tasks: project.tasks.filter(task => task.id !== event.taskId)
+            }
+      )
+    );
+  }
+}

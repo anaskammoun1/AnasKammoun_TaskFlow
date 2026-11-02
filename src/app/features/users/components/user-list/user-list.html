@@ -29,6 +29,7 @@
           [projects]="projects()"
           [users]="users()"
           (taskStatusChange)="updateTaskStatus($event)"
+          (taskDeleted)="deleteTask($event)"
         />
 
       }

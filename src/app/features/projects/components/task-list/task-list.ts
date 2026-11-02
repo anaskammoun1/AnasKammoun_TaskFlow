@@ -19,7 +19,7 @@ import { TaskItem } from '../task-item/task-item';
   styleUrl: './task-list.css'
 })
 export class TaskList {
-  statuses = ['En attente', 'En cours', 'Terminé'];
+  statuses = ['En cours', 'Terminé'];
 
   selectedStatus = signal<string>('');
 
@@ -42,10 +42,17 @@ export class TaskList {
     status: Task['status'];
   }>();
 
+  taskDeleted = output<number>();
+
   onTaskStatusChange(event: {
     taskId: number;
     status: Task['status'];
   }): void {
     this.taskStatusChange.emit(event);
   }
+
+  onTaskDeleted(taskId: number): void {
+    this.taskDeleted.emit(taskId);
+  }
+
 }
