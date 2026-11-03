@@ -1,10 +1,15 @@
-import { Component, input, output,computed  } from '@angular/core';
+import { Component, input, output,computed,inject  } from '@angular/core';
 import { Project } from '../../models/project.model';
 import { TaskList } from '../task-list/task-list';
 import { UpperCasePipe,DatePipe, CurrencyPipe,PercentPipe,DecimalPipe,SlicePipe, KeyValuePipe,NgStyle } from '@angular/common';
 import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
 import { User } from '../../../users/models/user.model';
 import { Task } from '../../models/task.model';
+import { FavoritesService } from '../../../../core/services/favorites.service';
+import { RecentProjectsService } from '../../../../core/services/recent-projects.service';
+import { ThemeService } from '../../../../core/services/theme.service';
+import { NotificationService } from '../../../../core/services/notification.service';
+
 
 type TaskStatusChangeEvent = {
   projectId: number;
@@ -26,6 +31,13 @@ export class ProjectCard {
 
   project = input.required<Project>();
   users = input<User[]>([]);
+
+  favoritesService = inject(FavoritesService);
+
+  recentProjectsService = inject(RecentProjectsService);
+
+  themeService = inject(ThemeService);
+  notificationService = inject(NotificationService);
 
   completedTasks = computed(() =>
   this.project().tasks.filter(task => task.status === 'Terminé').length
@@ -84,6 +96,7 @@ export class ProjectCard {
   projectSelected = output<Project>();
 
   selectProject() {
+    this.recentProjectsService.addProject(this.project());
     this.projectSelected.emit(this.project());
   }
 
@@ -108,5 +121,25 @@ export class ProjectCard {
       taskId
     });
   }
+
+  toggleFavorite(): void {
+  const id = this.project().id;
+  const alreadyFavorite = this.favoritesService.isFavorite(id);
+
+  this.favoritesService.toggle(id);
+
+  if (alreadyFavorite) {
+    this.notificationService.show(
+      'Projet retiré des favoris',
+      'info'
+    );
+  } else {
+    this.notificationService.show(
+      'Projet ajouté aux favoris',
+      'success'
+    );
+  }
+}
+
 
 }

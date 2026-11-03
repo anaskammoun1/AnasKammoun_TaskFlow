@@ -12,13 +12,13 @@
 >
 
   <!-- Titre et priorité -->
-  <div class="flex justify-between items-center">
-    <span class="font-medium text-gray-800">
+  <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+    <span class="min-w-0 flex-1 font-medium text-gray-800 break-words">
       {{ task().title }}
     </span>
 
     <span
-      class="text-sm font-semibold"
+      class="shrink-0 text-sm font-semibold"
       [appPriorityColor]="task().priority"
     >
       @switch (task().priority) {
@@ -36,8 +36,8 @@
   </div>
 
   <!-- Statut -->
-  <div class="flex justify-between items-center mt-2">
-    <p class="text-sm">
+  <div class="mt-2 flex flex-wrap items-center justify-between gap-2">
+    <p class="min-w-0 text-sm">
       Statut :
       <span
         class="font-semibold"
@@ -51,21 +51,23 @@
       </span>
     </p>
 
-    <button
-      type="button"
-      (click)="changeStatus()"
-      class="rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700"
-    >
-      Changer le statut
-    </button>
+    <div class="flex flex-wrap gap-2">
+      <button
+        type="button"
+        (click)="changeStatus()"
+        class="rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700"
+      >
+        Changer le statut
+      </button>
 
-    <button
-      type="button"
-      (click)="deleteTask()"
-      class="rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700"
-    >
-      Supprimer
-    </button>
+      <button
+        type="button"
+        (click)="deleteTask()"
+        class="rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700"
+      >
+        Supprimer
+      </button>
+    </div>
   </div>
 
   <!-- Échéance -->

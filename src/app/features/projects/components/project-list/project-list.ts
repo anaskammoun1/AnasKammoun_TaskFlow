@@ -1,5 +1,5 @@
 
-import { Component, computed, signal, OnInit } from '@angular/core';
+import { Component, computed, signal, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Project } from '../../models/project.model';
 import { ProjectCard } from '../project-card/project-card';
@@ -8,6 +8,10 @@ import { User } from '../../../users/models/user.model';
 import { UserService } from '../../../../core/services/user.service';
 import { Task } from '../../models/task.model';
 
+import { FavoritesService } from '../../../../core/services/favorites.service';
+import { RecentProjectsService } from '../../../../core/services/recent-projects.service';
+import { ThemeService } from '../../../../core/services/theme.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 type TaskStatusChangeEvent = {
   projectId: number;
   taskId: number;
@@ -31,6 +35,13 @@ export class ProjectList implements OnInit {
   users = signal<User[]>([]);
   searchTerm = signal('');
 
+  favoritesService = inject(FavoritesService);
+  recentProjectsService = inject(RecentProjectsService);
+
+  themeService = inject(ThemeService);
+
+  notificationService = inject(NotificationService);
+
   filteredProjects = computed(() => {
     return this.projects().filter(project =>
       project.name
@@ -39,16 +50,24 @@ export class ProjectList implements OnInit {
     );
   });
 
-  constructor(private projectService: ProjectService, private userService: UserService) {}
 
-  ngOnInit(): void {
-    this.projectService.getProjects().subscribe(projects => {
-      this.projects.set(projects);
-    });
-      this.userService.getUsers().subscribe(users => {
-    this.users.set(users);
+constructor(
+  private projectService: ProjectService,
+  private userService: UserService
+) {}
+
+ngOnInit(): void {
+  console.log('ID ProjectService dans ProjectList :', this.projectService.id);
+
+  this.projectService.getProjects().subscribe(projects => {
+    this.projects.set(projects);
   });
-  }
+
+  this.userService.getUsers().subscribe(users => {
+    this.users.set(users);
+    console.log('Utilisateurs chargés :', users);
+  });
+}
 
   selectProject(project: Project): void {
     console.log('Projet sélectionné :', project);

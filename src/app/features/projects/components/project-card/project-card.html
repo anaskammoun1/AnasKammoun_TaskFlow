@@ -1,9 +1,32 @@
+<div
+  appHighlight="#f0f9ff"
+  class="shadow-lg rounded-xl p-5 transition-colors"
+  [class.bg-gray-800]="themeService.isDarkMode()"
+  [class.bg-white]="!themeService.isDarkMode()"
+  [class.text-white]="themeService.isDarkMode()"
+  [class.text-gray-900]="!themeService.isDarkMode()"
+>
+  <div class="flex justify-between items-center mb-2">
+    <h2
+      class="text-xl font-bold"
+      [class.text-white]="themeService.isDarkMode()"
+      [class.text-gray-800]="!themeService.isDarkMode()"
+    >
+      {{ project().name | uppercase }}
+    </h2>
 
-<div appHighlight="#f0f9ff" class="bg-white shadow-lg rounded-xl p-5">
-
-  <h2 class="text-xl font-bold text-gray-800 mb-2">
-    {{ project().name | uppercase }}
-  </h2>
+    <button
+      type="button"
+      (click)="favoritesService.toggle(project().id)"
+      class="text-2xl"
+      [class.text-yellow-500]="favoritesService.isFavorite(project().id)"
+      [title]="favoritesService.isFavorite(project().id)
+        ? 'Retirer des favoris'
+        : 'Ajouter aux favoris'"
+    >
+      {{ favoritesService.isFavorite(project().id) ? '★' : '☆' }}
+    </button>
+  </div>
 
   <p>
     Date de début :
@@ -15,7 +38,11 @@
     {{ project().budget | currency:'TND':'':'1.2-2':'fr' }} TND
   </p>
 
-  <p class="text-gray-600 mb-3">
+  <p
+    class="mb-3"
+    [class.text-gray-300]="themeService.isDarkMode()"
+    [class.text-gray-600]="!themeService.isDarkMode()"
+  >
     {{ project().description }}
   </p>
 
@@ -52,7 +79,11 @@
       {{ averageCost | number:'1.0-0':'fr' }}
     </p>
   } @else {
-    <p class="text-gray-500 italic">
+    <p
+      class="italic"
+      [class.text-gray-400]="themeService.isDarkMode()"
+      [class.text-gray-500]="!themeService.isDarkMode()"
+    >
       Aucune tâche dans ce projet.
     </p>
   }
@@ -63,7 +94,12 @@
     @for (task of (project().tasks | slice:0:3); track task.id) {
       <li>{{ task.title }}</li>
     } @empty {
-      <li class="text-gray-500">Aucune tâche disponible.</li>
+      <li
+        [class.text-gray-400]="themeService.isDarkMode()"
+        [class.text-gray-500]="!themeService.isDarkMode()"
+      >
+        Aucune tâche disponible.
+      </li>
     }
   </ul>
 
@@ -93,16 +129,17 @@
 
   <app-task-list
     [tasks]="project().tasks"
+    [users]="users()"
     [showAssignee]="true"
     (taskStatusChange)="onTaskStatusChange($event)"
     (taskDeleted)="onTaskDeleted($event)"
   />
 
   <button
+    type="button"
     (click)="selectProject()"
     class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
   >
     Sélectionner
   </button>
-
 </div>

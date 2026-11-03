@@ -1,8 +1,49 @@
-<div class="max-w-6xl mx-auto p-6">
+<div
+  class="max-w-6xl mx-auto p-6 min-h-screen transition-colors"
+  [class.bg-gray-900]="themeService.isDarkMode()"
+  [class.text-white]="themeService.isDarkMode()"
+  [class.bg-gray-100]="!themeService.isDarkMode()"
+  [class.text-gray-900]="!themeService.isDarkMode()"
+>
 
-  <h1 class="text-3xl font-bold mb-6">
+@if (notificationService.notification(); as notification) {
+  <div
+    class="mb-4 p-4 rounded-lg flex justify-between items-center"
+    [class.bg-green-100]="notification.type === 'success'"
+    [class.text-green-800]="notification.type === 'success'"
+    [class.bg-red-100]="notification.type === 'error'"
+    [class.text-red-800]="notification.type === 'error'"
+    [class.bg-blue-100]="notification.type === 'info'"
+    [class.text-blue-800]="notification.type === 'info'"
+  >
+    <span>{{ notification.message }}</span>
+
+    <button
+      type="button"
+      (click)="notificationService.clear()"
+      class="font-bold ml-4"
+    >
+      ✕
+    </button>
+  </div>
+}
+
+<div class="flex justify-between items-center mb-6">
+  <h1
+    class="text-3xl font-bold mb-6"
+    [class.text-white]="themeService.isDarkMode()"
+    [class.text-gray-900]="!themeService.isDarkMode()"
+  >
     Liste des projets
   </h1>
+
+  <div class="flex items-center gap-4">
+    <span class="text-yellow-600 font-semibold">
+      ★ Favoris ({{ favoritesService.count() }})
+    </span>
+
+  </div>
+</div>
 
   <input
     type="text"
@@ -11,8 +52,12 @@
     //Cela crée une liaison bidirectionnelle entre le champ HTML et la variable TypeScript.
     [ngModel]="searchTerm()"
     (ngModelChange)="searchTerm.set($event)"
-    class="w-full border border-gray-300 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500"
-  >
+    [class.bg-gray-800]="themeService.isDarkMode()"
+    [class.text-white]="themeService.isDarkMode()"
+    [class.placeholder-gray-400]="themeService.isDarkMode()"
+    [class.border-gray-600]="themeService.isDarkMode()"
+    class="w-full border rounded-lg p-3 mb-6"
+    >
 
   <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 
@@ -22,8 +67,12 @@
       <app-project-card
       //C'est la communication : Parent → Enfant
       //ProjectList possède le projet et le transmet à ProjectCard via la propriété [project]
-        [project]="project"
-        [users]="users()"
+            [project]="project"
+            [users]="users()"
+            (projectSelected)="selectProject($event)"
+            (taskStatusChange)="updateTaskStatus($event)"
+            (taskDeleted)="deleteTask($event)"
+        
 
       //C'est l'inverse : Enfant → Parent, 
       //Lorsqu'on clique sur le bouton Il envoie le projet au parent
@@ -40,5 +89,25 @@
     }
 
   </div>
+
+  <!-- Barre latérale des projets récents -->
+    <aside class="bg-gray-50 rounded-xl p-4 shadow">
+
+      <h2 class="font-bold text-lg mb-4">
+        Projets récents
+      </h2>
+
+      @for (project of recentProjectsService.recentProjects(); track project.id) {
+        <div class="border-b py-3">
+          <p class="font-medium">{{ project.name }}</p>
+          <p class="text-sm text-gray-500">{{ project.status }}</p>
+        </div>
+      } @empty {
+        <p class="text-sm text-gray-500">
+          Aucun projet consulté.
+        </p>
+      }
+
+    </aside>
 
 </div>

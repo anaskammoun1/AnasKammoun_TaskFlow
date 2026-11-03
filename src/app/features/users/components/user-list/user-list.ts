@@ -7,6 +7,7 @@ import { PROJECTS } from '../../../projects/data/projects.data';
 import { UserCard } from '../user-card/user-card';
 import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
 import { Task } from '../../../projects/models/task.model';
+import { ProjectService } from '../../../../core/services/project.service';
 
 type TaskStatusChangeEvent = {
   projectId: number;
@@ -40,6 +41,12 @@ export class UserList {
         .includes(this.searchTerm().toLowerCase())
     );
   });
+
+  constructor(private projectService: ProjectService) {}
+
+  ngOnInit(): void {
+    console.log('ID ProjectService dans UserList :', this.projectService.id);
+  }
 
   updateTaskStatus(event: TaskStatusChangeEvent): void {
     this.projects.update(projects =>
